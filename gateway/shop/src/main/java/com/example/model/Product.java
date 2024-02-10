@@ -2,17 +2,10 @@ package com.example.model;
 
 import lombok.*;
 
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor
 public class Product {
-
-    public Product(String name, int quantity, int price) {
-        this.name = name;
-        this.quantity = quantity;
-        this.price = price;
-    }
 
     private long id;
 

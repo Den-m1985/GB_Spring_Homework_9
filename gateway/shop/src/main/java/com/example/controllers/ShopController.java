@@ -2,6 +2,8 @@ package com.example.controllers;
 
 import com.example.model.Product;
 import com.example.config.UrlProperties;
+import com.example.services.ProductServices;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -15,14 +17,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/shop")
 public class ShopController {
 
-    @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
-    private UrlProperties urlProperties;
+    ProductServices productServices;
 
 
     /**
@@ -33,15 +33,7 @@ public class ShopController {
      */
     @GetMapping("/")
     public String getProductFromWarehouse(Model model) {
-        String warehouseUrl = urlProperties.getUriGetProducts(); // URL модуля warehouse
-        ResponseEntity<List<Product>> response = restTemplate.exchange(
-                warehouseUrl,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {
-                }
-        );
-        List<Product> products = response.getBody();
+        List<Product> products = productServices.getAllProducts();
         model.addAttribute("products", products);
         return "products";
     }
@@ -56,15 +48,7 @@ public class ShopController {
      */
     @GetMapping("/product/{id}")
     public String getProductDetails(@PathVariable Long id, Model model) {
-        String warehouseUrl = urlProperties.getUriGetProduct() + id; // URL модуля warehouse
-        ResponseEntity<Product> response = restTemplate.exchange(
-                warehouseUrl,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {
-                }
-        );
-        Product product = response.getBody();
+        Product product = productServices.getProduct(id);
         model.addAttribute("product", product);
         return "product";
     }
@@ -80,13 +64,7 @@ public class ShopController {
      */
     @PostMapping("/buyProduct")
     public ResponseEntity<String> buyProduct(@RequestParam Long productId, @RequestParam int quantity) {
-        String warehouseUrl = urlProperties.getReserveProduct(); // URL метода резервации
-        MultiValueMap<String, Long> map = new LinkedMultiValueMap<>();
-        map.add("productId", productId);
-        map.add("quantity", (long) quantity);
-        ResponseEntity<String> response = restTemplate.postForEntity(warehouseUrl, map, String.class);
-        return response;
-        //return "redirect:/shop/";
+        return productServices.buyProduct(productId, quantity);
     }
 
 }

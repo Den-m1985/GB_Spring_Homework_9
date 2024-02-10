@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "products")
 public class Product {
 
