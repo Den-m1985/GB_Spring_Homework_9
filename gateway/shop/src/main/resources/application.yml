@@ -10,3 +10,15 @@ api:
     uriGetProducts: http://localhost:8081/warehouse/getProducts
     uriGetProduct: http://localhost:8081/warehouse/getProduct/
     reserveProduct: http://localhost:8081/warehouse/reserveProduct
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env, info, health, metrics,prometheus
+        #include=*
+    health:
+      show-details: always
+

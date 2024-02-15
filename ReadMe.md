@@ -22,3 +22,49 @@ API микросервисов:
 Переход по товарам (get запрос): http://localhost:8080/shop/product/1
 
 Покупка товара (post запрос): http://localhost:8080/shop/buyProduct
+
+_________________________________start Homework 11_________________________________________________
+Homework 11:
+Задание: По примерам показанным на семинаре:
+1) Подключить к своему проекту зависимости actuator, registry-prometheus и micrometer.
+2) Установить и подключить к проекту prometheus
+3) Установить и подключить Grafana. В Grafana добавить пару точеу контроля( Например: процессоное время приложения и количество запросов)
+   Формат сдачи: проект с добавленными зависимостями, файл настройки prometheus и скриншот Grafana с добавленными контрольными точками.
+   Задание со звездочкой:
+- Проделать, то же самое с многомодульным проектом(добавить под контроль несколько модулей)
+- Добавить собственную метрику.
+
+скачиваем:
+nssm-2.24
+prometheus-2.49.1.windows-amd64
+grafana-enterprise-10.3.1.windows-amd64.msi
+
+командная строка от имени администратора:
+    переходим на диск где распакован nssm-2.24 
+    cd e:\Программы\IT\Spring\nssm-2.24\win64\
+далее устанавливаем:
+    nssm.exe install prometheus e:\Программы\IT\Spring\prometheus-2.49.1.windows-amd64\prometheus.exe
+
+
+собираем из нескольких сервисов:
+global:
+scrape_interval: 15s
+evaluation_interval: 15s
+
+scrape_configs:
+- job_name: 'microservice1'
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+- targets: ['microservice1:port']
+- job_name: 'microservice2'
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+- targets: ['microservice2:port']
+- job_name: 'microservice3'
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+- targets: ['microservice3:port']
+________________________________end Homework 11________________________________________
