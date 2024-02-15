@@ -52,19 +52,24 @@ scrape_interval: 15s
 evaluation_interval: 15s
 
 scrape_configs:
-- job_name: 'microservice1'
-  metrics_path: /metrics
-  scheme: http
+# The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+- job_name: "prometheus"
+
+  # metrics_path defaults to '/metrics'
+  # scheme defaults to 'http'.
+
   static_configs:
-- targets: ['microservice1:port']
-- job_name: 'microservice2'
-  metrics_path: /metrics
-  scheme: http
+    - targets: ['localhost:9090']
+
+- job_name: 'microservice-shop'
+  metrics_path: /actuator/prometheus
+  #scheme: http
   static_configs:
-- targets: ['microservice2:port']
-- job_name: 'microservice3'
-  metrics_path: /metrics
-  scheme: http
+    - targets: ['localhost:8080']
+
+- job_name: 'microservice-warehouse'
+  metrics_path: /actuator/prometheus
+  #scheme: http
   static_configs:
-- targets: ['microservice3:port']
+    - targets: ['localhost:8081']
 ________________________________end Homework 11________________________________________

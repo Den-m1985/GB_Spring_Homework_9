@@ -16,19 +16,3 @@ spring:
           uri: http://localhost:8081/
           predicates:
             - Path=/warehouse/**
-
-scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-     - targets: ['localhost:9090']
-
-  - job_name: 'microservice-shop'
-    metrics_path: /actuator/prometheus
-    scheme: http
-    static_configs:
-      - targets: ['localhost:8080']
-  - job_name: 'microservice-warehouse'
-    metrics_path: /actuator/prometheus
-    scheme: http
-    static_configs:
-      - targets: ['localhost:8081']
