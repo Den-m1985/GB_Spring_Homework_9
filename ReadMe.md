@@ -23,53 +23,61 @@ API микросервисов:
 
 Покупка товара (post запрос): http://localhost:8080/shop/buyProduct
 
-_________________________________start Homework 11_________________________________________________
-Homework 11:
+___ 
+start Homework 11
+___
+#### Homework 11:
 Задание: По примерам показанным на семинаре:
-1) Подключить к своему проекту зависимости actuator, registry-prometheus и micrometer.
-2) Установить и подключить к проекту prometheus
-3) Установить и подключить Grafana. В Grafana добавить пару точеу контроля( Например: процессоное время приложения и количество запросов)
-   Формат сдачи: проект с добавленными зависимостями, файл настройки prometheus и скриншот Grafana с добавленными контрольными точками.
-   Задание со звездочкой:
-- Проделать, то же самое с многомодульным проектом(добавить под контроль несколько модулей)
-- Добавить собственную метрику.
+-[x] Подключить к своему проекту зависимости actuator, registry-prometheus и micrometer.
+-[x] Установить и подключить к проекту prometheus
+-[x] Установить и подключить Grafana. В Grafana добавить пару точеу контроля( Например: процессоное время приложения и количество запросов)
+ 
+#### Формат сдачи: 
+проект с добавленными зависимостями, файл настройки prometheus и скриншот Grafana с добавленными контрольными точками.
+
+#### Задание со звездочкой:
+-[x] Проделать, то же самое с многомодульным проектом(добавить под контроль несколько модулей)
+-[ ] Добавить собственную метрику.
 
 скачиваем:
-nssm-2.24
-prometheus-2.49.1.windows-amd64
-grafana-enterprise-10.3.1.windows-amd64.msi
+- nssm-2.24
+- prometheus-2.49.1.windows-amd64
+- grafana-enterprise-10.3.1.windows-amd64.msi
 
 командная строка от имени администратора:
-    переходим на диск где распакован nssm-2.24 
-    cd e:\Программы\IT\Spring\nssm-2.24\win64\
-далее устанавливаем:
-    nssm.exe install prometheus e:\Программы\IT\Spring\prometheus-2.49.1.windows-amd64\prometheus.exe
+    переходим на диск где распакован nssm-2.24
+    если это другой диск то:
+```PwerShell
+    e:
 
+    cd e:\{Путь до файла}\nssm-2.24\win64\
+```    
+далее устанавливаем:
+```PwerShell
+    nssm.exe install prometheus e:\{Путь до файла}\prometheus-2.49.1.windows-amd64\prometheus.exe
+```
 
 собираем из нескольких сервисов:
+```yml
 global:
 scrape_interval: 15s
 evaluation_interval: 15s
 
 scrape_configs:
-# The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
 - job_name: "prometheus"
-
-  # metrics_path defaults to '/metrics'
-  # scheme defaults to 'http'.
-
   static_configs:
     - targets: ['localhost:9090']
 
 - job_name: 'microservice-shop'
   metrics_path: /actuator/prometheus
-  #scheme: http
   static_configs:
     - targets: ['localhost:8080']
 
 - job_name: 'microservice-warehouse'
   metrics_path: /actuator/prometheus
-  #scheme: http
   static_configs:
     - targets: ['localhost:8081']
-________________________________end Homework 11________________________________________
+```
+___
+    end Homework 11
+___
