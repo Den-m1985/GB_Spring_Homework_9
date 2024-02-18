@@ -20,3 +20,12 @@ spring:
 
 server:
   port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env, info, health, metrics,prometheus
+        #include=*
+    health:
+      show-details: always
