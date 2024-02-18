@@ -2,9 +2,12 @@ package com.example.controllers;
 
 import com.example.model.Product;
 import com.example.config.UrlProperties;
+import com.example.services.FileGateway;
 import com.example.services.ProductServices;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,6 +28,10 @@ import java.util.List;
 public class ShopController {
 
     ProductServices productServices;
+
+    private final FileGateway fileGateway;
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
     /**
@@ -35,6 +44,11 @@ public class ShopController {
     public String getProductFromWarehouse(Model model) {
         List<Product> products = productServices.getAllProducts();
         model.addAttribute("products", products);
+
+        // Получаем текущее время
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String formattedDateTime = formatter.format(currentDateTime);
+        fileGateway.writeToFile("getAllProducts.txt", "get all products ---" + formattedDateTime);
         return "products";
     }
 
@@ -50,6 +64,11 @@ public class ShopController {
     public String getProductDetails(@PathVariable Long id, Model model) {
         Product product = productServices.getProduct(id);
         model.addAttribute("product", product);
+
+        // Получаем текущее время
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String formattedDateTime = formatter.format(currentDateTime);
+        fileGateway.writeToFile("getProduct.txt", product.getName() + "---" + formattedDateTime);
         return "product";
     }
 
@@ -64,6 +83,10 @@ public class ShopController {
      */
     @PostMapping("/buyProduct")
     public ResponseEntity<String> buyProduct(@RequestParam Long productId, @RequestParam int quantity) {
+        // Получаем текущее время
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String formattedDateTime = formatter.format(currentDateTime);
+        fileGateway.writeToFile("buyProduct.txt", productId + "---" + quantity + "---" + formattedDateTime);
         return productServices.buyProduct(productId, quantity);
     }
 
