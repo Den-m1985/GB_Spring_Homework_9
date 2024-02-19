@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import com.example.abserver.ProductCreateEvent;
 import com.example.model.Product;
 import com.example.config.UrlProperties;
 import com.example.services.FileGateway;
@@ -7,6 +8,7 @@ import com.example.services.ProductServices;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -30,6 +32,8 @@ public class ShopController {
     ProductServices productServices;
 
     private final FileGateway fileGateway;
+
+    ApplicationEventPublisher publisher;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -69,6 +73,9 @@ public class ShopController {
         LocalDateTime currentDateTime = LocalDateTime.now();
         String formattedDateTime = formatter.format(currentDateTime);
         fileGateway.writeToFile("getProduct.txt", product.getName() + "---" + formattedDateTime);
+
+        //abserver
+        publisher.publishEvent(new ProductCreateEvent(this, product));
         return "product";
     }
 
